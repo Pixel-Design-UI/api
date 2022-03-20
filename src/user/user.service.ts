@@ -1,17 +1,20 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RegisterDto } from './dto/register.dto';
 import { User } from './user.entity';
+import { Code } from '../code/code.entity'
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { MailerService } from '@nestjs-modules/mailer';
+import { ResetPwd1Dto, ResetPwd2Dto, ResetPwd3Dto } from './dto/reset-pwd.dto';
+import { CodeService } from '../code/code.service';
 const bcrypt = require('bcryptjs');
 
 @Injectable()
 export class UserService {
 
-  constructor(@InjectRepository(User) private userRepository: Repository<User>, private jwtService: JwtService, private readonly mailerService: MailerService) { }
+  constructor(@InjectRepository(User) private userRepository: Repository<User>, private jwtService: JwtService, private readonly mailerService: MailerService, private codeService: CodeService) { }
 
   // ----------------------------------------------------------------------------
   //  REGISTER 
@@ -52,14 +55,76 @@ export class UserService {
 
   public async login(data: LoginDto) {
     //Check if an user with that email exist
-    const findUser = await this.userRepository.findOne({ where: { email: data.email } });
+    const user = await this.userRepository.findOne({ where: { email: data.email } });
 
     //Check if password is the same
-    if (!findUser || !(await bcrypt.compare(data.password, findUser.password))) throw new BadRequestException('Email or password incorrect');
+    if (!user || !(await bcrypt.compare(data.password, user.password))) throw new BadRequestException('Email or password incorrect');
 
     //Create and assign token
-    const token = this.jwtService.sign({ id: findUser.id });
+    const token = this.jwtService.sign({ id: user.id });
 
-    return { user: findUser, token: token }
+    return { user: user, token: token }
+  }
+
+  // ----------------------------------------------------------------------------
+  //  RESET PASSWORD 1
+  // ----------------------------------------------------------------------------
+
+  public async resetpwd1(data: ResetPwd1Dto) {
+    //Check if an user with that email exist
+    const user = await this.userRepository.findOne({ where: { email: data.email } });
+    if (!user) throw new ConflictException('User with that email does not exist');
+
+    //Delete and create new code & send an email
+    this.codeService.createNewCode(user.id, 'reset-code', user.email)
+
+    return { message: "Code successfully created !" }
+  }
+
+  // ----------------------------------------------------------------------------
+  //  RESET PASSWORD 2
+  // ----------------------------------------------------------------------------
+
+  public async resetpwd2(data: ResetPwd2Dto) {
+    //Check if an user with that email exist
+    const user = await this.userRepository.findOne({ where: { email: data.email } });
+    if (!user) throw new ConflictException('User with that email does not exist');
+
+    //Check if the code is valid or not
+    const codeExist = await this.codeService.checkValidCode(data.code, user.id)
+    if (!codeExist) throw new ConflictException('Code not valid');
+
+    return { message: "Code exists !" }
+  }
+
+  // ----------------------------------------------------------------------------
+  //  RESET PASSWORD 3
+  // ----------------------------------------------------------------------------
+
+  public async resetpwd3(data: ResetPwd3Dto) {
+    //Check if an user with that email exist
+    const user = await this.userRepository.findOne({ where: { email: data.email } });
+    if (!user) throw new ConflictException('User with that email does not exist');
+
+    //Check if the code is valid or not
+    const codeExist = await this.codeService.checkValidCode(data.code, user.id)
+    if (!codeExist) throw new ConflictException('Code not valid');
+
+    //Hash the password & save user
+    user.password = await bcrypt.hash(data.newPassword, 10);
+    await this.userRepository.save(user);
+
+    this.codeService.deleteCode(data.code, user.id);
+
+    //Send an email
+    this.mailerService.sendMail({
+      to: data.email,
+      from: 'yo12345678910112@gmail.com',
+      subject: 'Password reseted',
+      text: ' ',
+      html: 'Your password has been changed.',
+    }).then(() => { }).catch(() => { });
+
+    return { message: "Password changed !" }
   }
 }

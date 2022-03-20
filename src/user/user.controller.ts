@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { ResetPwd1Dto, ResetPwd2Dto, ResetPwd3Dto } from './dto/reset-pwd.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -17,23 +18,18 @@ export class UserController {
     return this.userService.login(data);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.userService.findAll();
-  // }
+  @Post('reset-pwd-1')
+  resetpwd1(@Body() data: ResetPwd1Dto) {
+    return this.userService.resetpwd1(data);
+  }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.userService.findOne(+id);
-  // }
+  @Post('reset-pwd-2')
+  resetpwd2(@Body() data: ResetPwd2Dto) {
+    return this.userService.resetpwd2(data);
+  }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return this.userService.update(+id, updateUserDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.userService.remove(+id);
-  // }
+  @Post('reset-pwd-3')
+  resetpwd3(@Body() data: ResetPwd3Dto) {
+    return this.userService.resetpwd3(data);
+  }
 }
