@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, IsNull } from 'typeorm';
 
 @Entity()
 export class User {
@@ -20,22 +20,22 @@ export class User {
     @Column({ default: false })
     isLoggedWithGoogle: boolean;
 
-    @Column()
+    @Column({ nullable: true })
     fullName: string;
 
-    @Column()
+    @Column({ nullable: true })
     gender: string;
 
-    @Column()
+    @Column({ nullable: true })
     speakingLanguage: string;
 
-    @Column()
+    @Column({ nullable: true })
     city: string;
 
-    @Column()
+    @Column({ nullable: true })
     birthday: Date;
 
-    @Column()
+    @Column({ nullable: true })
     about: string;
 
     @CreateDateColumn({ name: 'created_at' })
