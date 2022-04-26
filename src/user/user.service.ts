@@ -26,7 +26,7 @@ export class UserService {
    * @param data The data recieved
    * @returns Id of the created user
    */
-  public async register(data: RegisterDto) {
+  public async register(data: RegisterDto): Promise<string> {
     //Check if email already exists
     const findEmail = await this.userRepository.findOne({ where: { email: data.email } });
     if (findEmail) throw new ConflictException('Email already exist');
@@ -60,7 +60,7 @@ export class UserService {
    * @param data The data recieved
    * @returns The user and jwt token
    */
-  public async login(data: LoginDto) {
+  public async login(data: LoginDto): Promise<object> {
     //Check if an user with that email exist
     const user = await this.userRepository.findOne({ where: { email: data.email } });
 
@@ -78,7 +78,7 @@ export class UserService {
    * @param data The data recieved
    * @returns A message if the code is created
    */
-  public async askResetPwd(data: AskResetDto) {
+  public async askResetPwd(data: AskResetDto): Promise<object> {
     //Check if an user with that email exist
     const user = await this.userRepository.findOne({ where: { email: data.email } });
     if (!user) throw new ConflictException('User with that email does not exist');
@@ -94,7 +94,7 @@ export class UserService {
    * @param data The data recieved
    * @returns A message if the code exists
    */
-  public async checkCodePwd(data: CheckCodeDto) {
+  public async checkCodePwd(data: CheckCodeDto): Promise<object> {
     //Check if an user with that email exist
     const user = await this.userRepository.findOne({ where: { email: data.email } });
     if (!user) throw new ConflictException('User with that email does not exist');
@@ -111,7 +111,7 @@ export class UserService {
    * @param data The data recieved
    * @returns A message if the password is changed
    */
-  public async setNewPwd(data: SetNewPwdDto) {
+  public async setNewPwd(data: SetNewPwdDto): Promise<object> {
     //Check if an user with that email exist
     const user = await this.userRepository.findOne({ where: { email: data.email } });
     if (!user) throw new ConflictException('User with that email does not exist');
