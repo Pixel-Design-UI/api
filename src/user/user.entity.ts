@@ -30,7 +30,7 @@ export class User {
     speakingLanguage: string;
 
     @Column({ nullable: true })
-    city: string;
+    region: string;
 
     @Column({ nullable: true })
     birthday: Date;
