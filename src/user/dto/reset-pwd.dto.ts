@@ -1,33 +1,25 @@
-import { IsEmail, IsNotEmpty, IsNumber } from "class-validator";
+import { IsEmail, IsNumber, Length } from "class-validator";
 
-export class ResetPwd1Dto {
-
-    @IsNotEmpty()
+export class AskResetDto {
     @IsEmail()
     email: string;
 }
 
-export class ResetPwd2Dto {
-
-    @IsNotEmpty()
+export class CheckCodeDto {
     @IsEmail()
     email: string;
 
-    @IsNotEmpty()
     @IsNumber()
     code: number;
 }
 
-export class ResetPwd3Dto {
-
-    @IsNotEmpty()
+export class SetNewPwdDto {
     @IsEmail()
     email: string;
 
-    @IsNotEmpty()
-    newPassword: number;
+    @Length(8, 48)
+    newPassword: string;
 
-    @IsNotEmpty()
     @IsNumber()
     code: number;
 }

@@ -22,17 +22,7 @@ import { CodeModule } from './code/code.module';
     }),
     PassportModule.register({ defaultStrategy: 'jwt', session: false }),
     MailerModule.forRoot({
-      transport: 'smtps://yo12345678910112@gmail.com:kH3Nc8aA@smtp.gmail.com',
-      defaults: {
-        from: '"nest-modules" <modules@nestjs.com>',
-      },
-      template: {
-        dir: __dirname + '/templates',
-        adapter: new EjsAdapter(),
-        options: {
-          strict: true,
-        },
-      },
+      transport: process.env.MAIL_TRANSPORT,
     }),
     UserModule,
     CodeModule,

@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { ResetPwd1Dto, ResetPwd2Dto, ResetPwd3Dto } from './dto/reset-pwd.dto';
+import { AskResetDto, CheckCodeDto, SetNewPwdDto } from './dto/reset-pwd.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -18,18 +18,18 @@ export class UserController {
     return this.userService.login(data);
   }
 
-  @Post('reset-pwd-1')
-  resetpwd1(@Body() data: ResetPwd1Dto) {
-    return this.userService.resetpwd1(data);
+  @Post('ask-reset-pwd')
+  askResetPwd(@Body() data: AskResetDto) {
+    return this.userService.askResetPwd(data);
   }
 
-  @Post('reset-pwd-2')
-  resetpwd2(@Body() data: ResetPwd2Dto) {
-    return this.userService.resetpwd2(data);
+  @Post('check-code-pwd')
+  checkCodePwd(@Body() data: CheckCodeDto) {
+    return this.userService.checkCodePwd(data);
   }
 
-  @Post('reset-pwd-3')
-  resetpwd3(@Body() data: ResetPwd3Dto) {
-    return this.userService.resetpwd3(data);
+  @Post('set-new-pwd')
+  setNewPwd(@Body() data: SetNewPwdDto) {
+    return this.userService.setNewPwd(data);
   }
 }

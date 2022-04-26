@@ -1,25 +1,31 @@
-import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RegisterDto } from './dto/register.dto';
 import { User } from './user.entity';
-import { Code } from '../code/code.entity'
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { MailerService } from '@nestjs-modules/mailer';
-import { ResetPwd1Dto, ResetPwd2Dto, ResetPwd3Dto } from './dto/reset-pwd.dto';
+import { AskResetDto, CheckCodeDto, SetNewPwdDto } from './dto/reset-pwd.dto';
 import { CodeService } from '../code/code.service';
 const bcrypt = require('bcryptjs');
 
 @Injectable()
 export class UserService {
 
-  constructor(@InjectRepository(User) private userRepository: Repository<User>, private jwtService: JwtService, private readonly mailerService: MailerService, private codeService: CodeService) { }
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+    private jwtService: JwtService,
+    private readonly mailerService: MailerService,
+    private codeService: CodeService)
+  { }
 
-  // ----------------------------------------------------------------------------
-  //  REGISTER 
-  // ---------------------------------------------------------------------------- 
-
+  /**
+   * Create a new user
+   * @param data The data recieved
+   * @returns Id of the created user
+   */
   public async register(data: RegisterDto) {
     //Check if email already exists
     const findEmail = await this.userRepository.findOne({ where: { email: data.email } });
@@ -44,15 +50,16 @@ export class UserService {
       subject: 'Welcome on BuyFair',
       text: ' ',
       html: 'Your account has been succesfully created.',
-    }).then(() => { }).catch(() => { });
+    }).then();
 
     return savedUser.id;
   }
 
-  // ----------------------------------------------------------------------------
-  //  LOGIN 
-  // ---------------------------------------------------------------------------- 
-
+  /**
+   * Login the user
+   * @param data The data recieved
+   * @returns The user and jwt token
+   */
   public async login(data: LoginDto) {
     //Check if an user with that email exist
     const user = await this.userRepository.findOne({ where: { email: data.email } });
@@ -66,11 +73,12 @@ export class UserService {
     return { user: user, token: token }
   }
 
-  // ----------------------------------------------------------------------------
-  //  RESET PASSWORD 1
-  // ----------------------------------------------------------------------------
-
-  public async resetpwd1(data: ResetPwd1Dto) {
+  /**
+   * Create a new code
+   * @param data The data recieved
+   * @returns A message if the code is created
+   */
+  public async askResetPwd(data: AskResetDto) {
     //Check if an user with that email exist
     const user = await this.userRepository.findOne({ where: { email: data.email } });
     if (!user) throw new ConflictException('User with that email does not exist');
@@ -81,11 +89,12 @@ export class UserService {
     return { message: "Code successfully created !" }
   }
 
-  // ----------------------------------------------------------------------------
-  //  RESET PASSWORD 2
-  // ----------------------------------------------------------------------------
-
-  public async resetpwd2(data: ResetPwd2Dto) {
+  /**
+   * Check if the code is valid or not
+   * @param data The data recieved
+   * @returns A message if the code exists
+   */
+  public async checkCodePwd(data: CheckCodeDto) {
     //Check if an user with that email exist
     const user = await this.userRepository.findOne({ where: { email: data.email } });
     if (!user) throw new ConflictException('User with that email does not exist');
@@ -97,11 +106,12 @@ export class UserService {
     return { message: "Code exists !" }
   }
 
-  // ----------------------------------------------------------------------------
-  //  RESET PASSWORD 3
-  // ----------------------------------------------------------------------------
-
-  public async resetpwd3(data: ResetPwd3Dto) {
+  /**
+   * Set the new password for the user
+   * @param data The data recieved
+   * @returns A message if the password is changed
+   */
+  public async setNewPwd(data: SetNewPwdDto) {
     //Check if an user with that email exist
     const user = await this.userRepository.findOne({ where: { email: data.email } });
     if (!user) throw new ConflictException('User with that email does not exist');
