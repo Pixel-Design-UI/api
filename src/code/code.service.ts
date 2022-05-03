@@ -52,8 +52,8 @@ export class CodeService {
      * @param userId Id of the user
      * @returns A boolean if the code is valid or not
      */
-    public async checkValidCode(code: number, userId: string): Promise<Code> {
-        return await this.codeRepository.findOne({ where: { code: code, userId: userId } });
+    public async checkValidCode(code: number, userId: string, type: string): Promise<Code> {
+        return await this.codeRepository.findOne({ where: { code: code, userId: userId, type: type } });
     }
 
     /**
@@ -62,8 +62,8 @@ export class CodeService {
      * @param userId Id of the user
      * @returns The code deleted
      */
-    public async deleteCode(code: number, userId: string): Promise<void> {
-        const findCode = await this.codeRepository.findOne({ where: { code: code, userId: userId } });
+    public async deleteCode(code: number, userId: string, type: string): Promise<void> {
+        const findCode = await this.codeRepository.findOne({ where: { code: code, userId: userId, type: type } });
         await this.codeRepository.remove(findCode);
     }
 }

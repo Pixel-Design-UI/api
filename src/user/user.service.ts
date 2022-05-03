@@ -26,7 +26,7 @@ export class UserService {
    * @param data The data recieved
    * @returns Id of the created user
    */
-  public async register(data: RegisterDto): Promise<string> {
+  public async register(data: RegisterDto): Promise<object> {
     //Check if email already exists
     const findEmail = await this.userRepository.findOne({ where: { email: data.email } });
     if (findEmail) throw new ConflictException('Email already exist');
@@ -52,7 +52,7 @@ export class UserService {
       html: 'Your account has been succesfully created.',
     }).then();
 
-    return savedUser.id;
+    return { id: savedUser.id };
   }
 
   /**
@@ -100,7 +100,7 @@ export class UserService {
     if (!user) throw new ConflictException('User with that email does not exist');
 
     //Check if the code is valid or not
-    const codeExist = await this.codeService.checkValidCode(data.code, user.id)
+    const codeExist = await this.codeService.checkValidCode(data.code, user.id, 'reset-code')
     if (!codeExist) throw new ConflictException('Code not valid');
 
     return { message: "Code exists !" }
@@ -117,14 +117,14 @@ export class UserService {
     if (!user) throw new ConflictException('User with that email does not exist');
 
     //Check if the code is valid or not
-    const codeExist = await this.codeService.checkValidCode(data.code, user.id)
+    const codeExist = await this.codeService.checkValidCode(data.code, user.id, 'reset-code')
     if (!codeExist) throw new ConflictException('Code not valid');
 
     //Hash the password & save user
     user.password = await bcrypt.hash(data.newPassword, 10);
     await this.userRepository.save(user);
 
-    this.codeService.deleteCode(data.code, user.id);
+    this.codeService.deleteCode(data.code, user.id, 'reset-code');
 
     //Send an email
     this.mailerService.sendMail({
