@@ -21,13 +21,11 @@ export class CodeService {
      * @param email Email of the user
      */
     public async createNewCode(id: string, type: string, email: string): Promise<void> {
-        //Check if codes already exist & delete them
         await getConnection().createQueryBuilder().delete().from(Code)
             .where("userId = :userId", { userId: id })
             .andWhere("type = :type", { type: type })
             .execute();
 
-        //Create a new code & save it
         const newCode = {
             userId: id,
             code: Math.floor(10000 + Math.random() * 90000),
@@ -36,7 +34,6 @@ export class CodeService {
         const savedCode = await this.codeRepository.save(newCode);
         if (!savedCode) throw new BadRequestException('An error has occured while saving the code');
 
-        //Send an email to the user
         this.mailerService.sendMail({
             to: email,
             from: 'yo12345678910112@gmail.com',

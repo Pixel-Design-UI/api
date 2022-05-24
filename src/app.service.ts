@@ -3,6 +3,6 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
   getHello(): string {
-    return 'The official BuyFair api !';
+    return 'The official Pixel api !';
   }
 }

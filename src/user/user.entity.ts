@@ -6,6 +6,9 @@ export class User {
     id: any;
 
     @Column()
+    username: string;
+
+    @Column()
     email: string;
 
     @Column()
@@ -20,23 +23,19 @@ export class User {
     @Column({ default: false })
     isLoggedWithGoogle: boolean;
 
+    @Column({ default: false })
+    isLoggedWithDiscord: boolean;
+
     @Column({ nullable: true })
     fullName: string;
 
     @Column({ nullable: true })
-    gender: string;
-
-    @Column({ nullable: true })
-    speakingLanguage: string;
-
-    @Column({ nullable: true })
-    region: string;
-
-    @Column({ nullable: true })
-    birthday: Date;
+    profileUrl: string;
 
     @Column({ nullable: true })
     about: string;
+
+    //link to links
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
