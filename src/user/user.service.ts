@@ -66,7 +66,6 @@ export class UserService {
    */
   public async findOne(id: string): Promise<User> {
     const user = await this.userRepository.findOne(id);
-
     if (!user) throw new NotFoundException('User with that ID does not exist');
     return user;
   }
