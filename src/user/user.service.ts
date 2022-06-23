@@ -1,6 +1,7 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RegisterDto } from './dto/register.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
@@ -26,7 +27,7 @@ export class UserService {
    * @param data The data recieved
    * @returns Id of the created user
    */
-  public async register(data: RegisterDto): Promise<object> {
+  public async create(data: CreateUserDto): Promise<object> {
     const findEmail = await this.userRepository.findOne({ where: { email: data.email } });
     if (findEmail) throw new ConflictException('Email already exist');
 
@@ -52,6 +53,47 @@ export class UserService {
   }
 
   /**
+   * Find all users
+   * @returns A list of all users
+   */
+  public findAll(): Promise<User[]> {
+    return this.userRepository.find();
+  }
+
+  /**
+   * Find one user based on the id
+   * @param id The id of the user
+   * @returns The user with this id
+   */
+  public findOne(id: string): Promise<User> {
+    return this.userRepository.findOne({ id });
+  }
+
+  // /**
+  //  * Update a selected user
+  //  * @param id The id of the user
+  //  * @param data The data recieved
+  //  * @returns A message if the user is updated
+  //  */
+  // public async update(id: number, data: UpdateUserDto) {
+  //   return { message: "The user is updated !" }
+  // }
+
+  /**
+   * Remove a selected user
+   * @param id The id of the user
+   * @returns A message if the user is deleted
+   */
+  public async remove(id: string): Promise<object> {
+    const user = await this.userRepository.findOne({ where: { id: id } });
+
+    if (!user) throw new NotFoundException('User with that ID does not exist');
+    await this.userRepository.remove(user);
+
+    return { message: "User successfully deleted!"}
+  }
+
+  /**
    * Login the user
    * @param data The data recieved
    * @returns The user and jwt token
@@ -73,7 +115,7 @@ export class UserService {
    */
   public async askResetPwd(data: AskResetDto): Promise<object> {
     const user = await this.userRepository.findOne({ where: { email: data.email } });
-    if (!user) throw new ConflictException('User with that email does not exist');
+    if (!user) throw new NotFoundException('User with that email does not exist');
 
     this.codeService.createNewCode(user.id, 'reset-code', user.email)
 
@@ -87,7 +129,7 @@ export class UserService {
    */
   public async checkCodePwd(data: CheckCodeDto): Promise<object> {
     const user = await this.userRepository.findOne({ where: { email: data.email } });
-    if (!user) throw new ConflictException('User with that email does not exist');
+    if (!user) throw new NotFoundException('User with that email does not exist');
 
     const codeExist = await this.codeService.checkValidCode(data.code, user.id, 'reset-code')
     if (!codeExist) throw new ConflictException('Code not valid');
@@ -102,7 +144,7 @@ export class UserService {
    */
   public async setNewPwd(data: SetNewPwdDto): Promise<object> {
     const user = await this.userRepository.findOne({ where: { email: data.email } });
-    if (!user) throw new ConflictException('User with that email does not exist');
+    if (!user) throw new NotFoundException('User with that email does not exist');
 
     const codeExist = await this.codeService.checkValidCode(data.code, user.id, 'reset-code')
     if (!codeExist) throw new ConflictException('Code not valid');
