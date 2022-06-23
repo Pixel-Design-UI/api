@@ -44,13 +44,7 @@ export class UserService {
     const savedUser = await this.userRepository.save(newUser);
     savedUser.password = undefined;
 
-    this.mailerService.sendMail({
-      to: data.email,
-      from: 'yo12345678910112@gmail.com',
-      subject: 'Welcome on Pixel',
-      text: ' ',
-      html: 'Your account has been succesfully created.',
-    }).then();
+    //Send EMAIL to say the account has been created
 
     return { id: savedUser.id };
   }
@@ -161,13 +155,7 @@ export class UserService {
 
     this.codeService.deleteCode(data.code, user.id, 'reset-code');
 
-    this.mailerService.sendMail({
-      to: data.email,
-      from: 'yo12345678910112@gmail.com',
-      subject: 'Password reseted',
-      text: ' ',
-      html: 'Your password has been changed.',
-    }).then(() => { }).catch(() => { });
+    //Send EMAIL to say the password has been changed
 
     return { message: "Password changed !" }
   }

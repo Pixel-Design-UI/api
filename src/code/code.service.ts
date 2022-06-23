@@ -34,13 +34,9 @@ export class CodeService {
         const savedCode = await this.codeRepository.save(newCode);
         if (!savedCode) throw new BadRequestException('An error has occured while saving the code');
 
-        this.mailerService.sendMail({
-            to: email,
-            from: 'yo12345678910112@gmail.com',
-            subject: 'Reset code',
-            text: ' ',
-            html: 'Here is your reset code :' + newCode.code,
-        }).then();
+        //Send EMAIL newCode.code to user
+
+        console.log("message sent")
     }
 
     /**
