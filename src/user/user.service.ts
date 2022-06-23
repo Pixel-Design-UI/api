@@ -65,7 +65,8 @@ export class UserService {
    * @returns The user with this id
    */
   public async findOne(id: string): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { id: id } });
+    const user = await this.userRepository.findOne(id);
+
     if (!user) throw new NotFoundException('User with that ID does not exist');
     return user;
   }
@@ -86,7 +87,7 @@ export class UserService {
    * @returns A message if the user is deleted
    */
   public async remove(id: string): Promise<object> {
-    const user = await this.userRepository.findOne({ where: { id: id } });
+    const user = await this.userRepository.findOne(id);
 
     if (!user) throw new NotFoundException('User with that ID does not exist');
     await this.userRepository.remove(user);
@@ -118,7 +119,7 @@ export class UserService {
     const user = await this.userRepository.findOne({ where: { email: data.email } });
     if (!user) throw new NotFoundException('User with that email does not exist');
 
-    this.codeService.createNewCode(user.id, 'reset-code', user.email)
+    this.codeService.createNewCode(user, 'reset-code', user.email)
 
     return { message: "Code successfully created !" }
   }

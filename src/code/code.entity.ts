@@ -1,12 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
+import { User } from 'src/user/user.entity';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Code {
     @PrimaryGeneratedColumn('uuid')
     id: number;
 
-    @Column()
-    userId: string;
+    @ManyToOne(() => User, (userId: User) => userId.codes, {onDelete:'CASCADE'})
+    userId: User;
 
     @Column()
     code: number;

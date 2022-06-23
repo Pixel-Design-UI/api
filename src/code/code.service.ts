@@ -1,6 +1,7 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/user/user.entity';
 import { getConnection, Repository } from 'typeorm';
 import { Code } from './code.entity';
 
@@ -20,14 +21,14 @@ export class CodeService {
      * @param type Type of generated code
      * @param email Email of the user
      */
-    public async createNewCode(id: string, type: string, email: string): Promise<void> {
+    public async createNewCode(user: User, type: string, email: string): Promise<void> {
         await getConnection().createQueryBuilder().delete().from(Code)
-            .where("userId = :userId", { userId: id })
+            .where("userId = :userId", { userId: user.id })
             .andWhere("type = :type", { type: type })
             .execute();
-
+        
         const newCode = {
-            userId: id,
+            userId: user,
             code: Math.floor(10000 + Math.random() * 90000),
             type: type
         }

@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Code } from 'src/code/code.entity';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class User {
@@ -30,12 +31,17 @@ export class User {
     fullName: string;
 
     @Column({ nullable: true })
-    profileUrl: string;
+    profileImg: string;
 
     @Column({ nullable: true })
     about: string;
 
     //link to links
+
+    //eager:true
+
+    @OneToMany(() => Code, (code: Code) => code.userId, { cascade: true})
+    codes: Code[];
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
