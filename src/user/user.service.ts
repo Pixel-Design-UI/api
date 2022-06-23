@@ -1,7 +1,6 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
@@ -69,16 +68,6 @@ export class UserService {
     if (!user) throw new NotFoundException('User with that ID does not exist');
     return user;
   }
-
-  // /**
-  //  * Update a selected user
-  //  * @param id The id of the user
-  //  * @param data The data recieved
-  //  * @returns A message if the user is updated
-  //  */
-  // public async update(id: number, data: UpdateUserDto) {
-  //   return { message: "The user is updated !" }
-  // }
 
   /**
    * Remove a selected user

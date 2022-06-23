@@ -1,4 +1,5 @@
 import { Code } from 'src/code/code.entity';
+import { Link } from 'src/links/link.entity';
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 
 @Entity()
@@ -36,9 +37,8 @@ export class User {
     @Column({ nullable: true })
     about: string;
 
-    //link to links
-
-    //eager:true
+    @OneToMany(() => Link, (link: Link) => link.userId, { cascade: true, eager:true})
+    links: Code[];
 
     @OneToMany(() => Code, (code: Code) => code.userId, { cascade: true})
     codes: Code[];

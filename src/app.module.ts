@@ -7,6 +7,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { CodeModule } from './code/code.module';
+import { LinksModule } from './links/links.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CodeModule } from './code/code.module';
     }),
     UserModule,
     CodeModule,
+    LinksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
