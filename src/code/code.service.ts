@@ -42,7 +42,7 @@ export class CodeService {
      * @param type Type of generated code
      * @param email Email of the user
      */
-    public async createNewCode(user: User, type: string, email: string): Promise<void> {
+    public async create(user: User, type: string, email: string): Promise<void> {
         await getConnection().createQueryBuilder().delete().from(Code)
             .where("userId = :userId", { userId: user.id })
             .andWhere("type = :type", { type: type })
@@ -57,18 +57,6 @@ export class CodeService {
         if (!savedCode) throw new BadRequestException('An error has occured while saving the code');
 
         //Send EMAIL newCode.code to user
-
-        console.log("message sent")
-    }
-
-    /**
-     * Check the given code and check if it still exist
-     * @param code The code generated
-     * @param userId Id of the user
-     * @returns A boolean if the code is valid or not
-     */
-    public async checkValidCode(code: number, userId: string, type: string): Promise<Code> {
-        return await this.codeRepository.findOne({ where: { code: code, userId: userId, type: type } });
     }
 
     /**
@@ -77,8 +65,19 @@ export class CodeService {
      * @param userId Id of the user
      * @returns The code deleted
      */
-    public async deleteCode(code: number, userId: string, type: string): Promise<void> {
+    public async remove(code: number, userId: string, type: string): Promise<void> {
         const findCode = await this.codeRepository.findOne({ where: { code: code, userId: userId, type: type } });
+        if (!findCode) throw new NotFoundException('Code does not exist');
         await this.codeRepository.remove(findCode);
+    }    
+    
+    /**
+    * Check the given code and check if it still exist
+    * @param code The code generated
+    * @param userId Id of the user
+    * @returns A boolean if the code is valid or not
+    */
+    public async checkValidCode(code: number, userId: string, type: string): Promise<Code> {
+        return await this.codeRepository.findOne({ where: { code: code, userId: userId, type: type } });
     }
 }

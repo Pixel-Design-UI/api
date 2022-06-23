@@ -118,7 +118,7 @@ export class UserService {
     const user = await this.userRepository.findOne({ where: { email: data.email } });
     if (!user) throw new NotFoundException('User with that email does not exist');
 
-    this.codeService.createNewCode(user, 'reset-code', user.email)
+    this.codeService.create(user, 'reset-code', user.email)
 
     return { message: "Code successfully created !" }
   }
@@ -153,7 +153,7 @@ export class UserService {
     user.password = await bcrypt.hash(data.newPassword, 10);
     await this.userRepository.save(user);
 
-    this.codeService.deleteCode(data.code, user.id, 'reset-code');
+    this.codeService.remove(data.code, user.id, 'reset-code');
 
     //Send EMAIL to say the password has been changed
 
