@@ -31,11 +31,14 @@ export class UserService {
     const findEmail = await this.userRepository.findOne({ where: { email: data.email } });
     if (findEmail) throw new ConflictException('Email already exist');
 
+    const findUsername = await this.userRepository.findOne({ where: { username: data.username } });
+    if (findUsername) throw new ConflictException('Username already exist');
+
     data.password = await bcrypt.hash(data.password, 10);
 
     const newUser = {
       email: data.email,
-      fullName: data.fullName,
+      username: data.username,
       password: data.password
     }
     const savedUser = await this.userRepository.save(newUser);
@@ -56,8 +59,10 @@ export class UserService {
    * Find all users
    * @returns A list of all users
    */
-  public findAll(): Promise<User[]> {
-    return this.userRepository.find();
+  public async findAll(): Promise<User[]> {
+    const users = await this.userRepository.find();
+    if (!users) throw new NotFoundException('No users found');
+    return users;
   }
 
   /**
@@ -65,8 +70,10 @@ export class UserService {
    * @param id The id of the user
    * @returns The user with this id
    */
-  public findOne(id: string): Promise<User> {
-    return this.userRepository.findOne({ id });
+  public async findOne(id: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id: id } });
+    if (!user) throw new NotFoundException('User with that ID does not exist');
+    return user;
   }
 
   // /**
