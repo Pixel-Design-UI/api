@@ -5,7 +5,6 @@ import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
-import { MailerService } from '@nestjs-modules/mailer';
 import { AskResetDto, CheckCodeDto, SetNewPwdDto } from './dto/reset-pwd.dto';
 import { CodeService } from '../code/code.service';
 const bcrypt = require('bcryptjs');
@@ -17,7 +16,6 @@ export class UserService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private jwtService: JwtService,
-    private readonly mailerService: MailerService,
     private codeService: CodeService)
   { }
 

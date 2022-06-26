@@ -1,4 +1,3 @@
-import { MailerService } from '@nestjs-modules/mailer';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/user.entity';
@@ -10,8 +9,7 @@ export class CodeService {
 
     constructor(
         @InjectRepository(Code)
-        private codeRepository: Repository<Code>,
-        private mailerService: MailerService)
+        private codeRepository: Repository<Code>)
     { }
 
     /**

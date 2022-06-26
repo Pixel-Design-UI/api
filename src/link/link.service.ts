@@ -1,17 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { CreateLinkDto } from './dto/create-link.dto';
 import { UpdateLinkDto } from './dto/update-link.dto';
-import { Link } from './link.entity';
 
 @Injectable()
-export class LinksService {
-  constructor(
-    @InjectRepository(Link)
-    private linkRespository: Repository<Link>)
-  { }
-
+export class LinkService {
   /**
    * Create a new link
    * @param data The data recieved

@@ -6,7 +6,7 @@ import { CodeController } from './code.controller';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Code])
+    TypeOrmModule.forFeature([Code]),
   ],
   providers: [CodeService],
   exports: [CodeService],

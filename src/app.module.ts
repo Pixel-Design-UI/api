@@ -1,5 +1,3 @@
-import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
-import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -7,7 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { CodeModule } from './code/code.module';
-import { LinksModule } from './links/links.module';
+import { LinkModule } from './link/link.module';
 
 @Module({
   imports: [
@@ -22,12 +20,9 @@ import { LinksModule } from './links/links.module';
       synchronize: true,
     }),
     PassportModule.register({ defaultStrategy: 'jwt', session: false }),
-    MailerModule.forRoot({
-      transport: process.env.MAIL_TRANSPORT,
-    }),
     UserModule,
     CodeModule,
-    LinksModule,
+    LinkModule,
   ],
   controllers: [AppController],
   providers: [AppService],
