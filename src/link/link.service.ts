@@ -14,10 +14,10 @@ export class LinkService {
   }
 
   /**
-   * Find all links
+   * Find all links of an user
    * @returns A list of all links
    */
-  public async findAll() {
+  public async findAllForUser(userId: string) {
     return `This action returns all links`;
   }
 
