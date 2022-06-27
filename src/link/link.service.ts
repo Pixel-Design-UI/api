@@ -40,7 +40,7 @@ export class LinkService {
    */
   public async findAllForUser(userId: string): Promise<Link[]> {
     const allLinks = await this.linkRepository.find({ where: { userId: userId } });
-    if (!allLinks) throw new NotFoundException('Liks with that userId does not exist');
+    if (allLinks.length === 0) throw new NotFoundException('Liks with that userId does not exist');
 
     return allLinks;
   }

@@ -1,16 +1,18 @@
-import { User } from "src/user/user.entity";
 import { PrimaryGeneratedColumn, ManyToOne, Column, CreateDateColumn, Entity, UpdateDateColumn } from "typeorm";
 
 @Entity()
-export class Link {
+export class Event {
     @PrimaryGeneratedColumn('uuid')
     id: number;
 
-    @ManyToOne(() => User, (userId: User) => userId.links, {onDelete:'CASCADE'})
-    userId: User;
+    @Column()
+    plateform: string;
 
     @Column()
-    type: string;
+    title: string;
+
+    @Column()
+    description: string;
 
     @Column()
     url: string;
