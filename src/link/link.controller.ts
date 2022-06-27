@@ -11,12 +11,12 @@ export class LinkController {
   @Post()
   @UseGuards(AuthGuard())
   create(@Body() createLinkDto: CreateLinkDto, @Req() req) {
-    return this.linkService.create(createLinkDto, req.user.id);
+    return this.linkService.create(createLinkDto, req.user);
   }
 
-  @Get()
-  findAllForUser(@Req() req) {
-    return this.linkService.findAllForUser(req.user.id);
+  @Get(':userId')
+  findAllForUser(@Param('userId') userId: string) {
+    return this.linkService.findAllForUser(userId);
   }
 
   @Patch(':id')
@@ -27,7 +27,7 @@ export class LinkController {
 
   @Delete(':id')
   @UseGuards(AuthGuard())
-  remove(@Param('id') id: string) {
-    return this.linkService.remove(id);
+  remove(@Param('id') id: string, @Req() req) {
+    return this.linkService.remove(id, req.user);
   }
 }
