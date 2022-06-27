@@ -6,6 +6,8 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { CodeModule } from './code/code.module';
 import { LinkModule } from './link/link.module';
+import { EventModule } from './event/event.module';
+import { BlogModule } from './blog/blog.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { LinkModule } from './link/link.module';
     UserModule,
     CodeModule,
     LinkModule,
+    EventModule,
+    BlogModule,
   ],
   controllers: [AppController],
   providers: [AppService],
