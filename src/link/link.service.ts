@@ -51,17 +51,17 @@ export class LinkService {
    * @param data The data recieved
    * @returns A message if the link is deleted
    */
-  public async update(idLink: string, data: UpdateLinkDto): Promise<object> {
-    const link = await this.linkRepository.findOne({ where: { id: idLink } });
+  public async update(idLink: string, data: UpdateLinkDto, user: User): Promise<object> {
+    const link = await this.linkRepository.findOne(idLink);
     if (!link) throw new NotFoundException('Link does not exist');
 
     const editLink = {
-      userId: link.userId,
+      userId: user,
       type: data.type,
       url: data.url,
     }
 
-    const savedLink = await this.linkRepository.save(editLink);
+    const savedLink = await this.linkRepository.update(idLink, editLink);
     if (!savedLink) throw new BadRequestException('An error has occured while saving the link');
 
     return { message: "Link updated !" }

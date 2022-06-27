@@ -21,8 +21,8 @@ export class LinkController {
 
   @Patch(':id')
   @UseGuards(AuthGuard())
-  update(@Param('id') id: string, @Body() updateLinkDto: UpdateLinkDto) {
-    return this.linkService.update(id, updateLinkDto);
+  update(@Param('id') id: string, @Body() updateLinkDto: UpdateLinkDto, @Req() req) {
+    return this.linkService.update(id, updateLinkDto, req.user);
   }
 
   @Delete(':id')
