@@ -47,33 +47,12 @@ export class UserService {
   }
 
   /**
-   * Find all users
-   * @returns A list of all users
-   */
-  public async findAll(): Promise<User[]> {
-    const users = await this.userRepository.find();
-    if (!users) throw new NotFoundException('No users found');
-    return users;
-  }
-
-  /**
-   * Find one user based on the id
-   * @param id The id of the user
-   * @returns The user with this id
-   */
-  public async findOne(id: string): Promise<User> {
-    const user = await this.userRepository.findOne(id);
-    if (!user) throw new NotFoundException('User with that ID does not exist');
-    return user;
-  }
-
-  /**
    * Remove a selected user
-   * @param id The id of the user
+   * @param idLink The id of the user
    * @returns A message if the user is deleted
    */
-  public async remove(id: string): Promise<object> {
-    const user = await this.userRepository.findOne(id);
+  public async remove(idUser: string): Promise<object> {
+    const user = await this.userRepository.findOne(idUser);
 
     if (!user) throw new NotFoundException('User with that ID does not exist');
     await this.userRepository.remove(user);
