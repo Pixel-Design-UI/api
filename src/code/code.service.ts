@@ -13,27 +13,6 @@ export class CodeService {
     { }
 
     /**
-     * Find all codes
-     * @returns A list of all codes
-     */
-    public async findAll(): Promise<Code[]> {
-        const codes = await this.codeRepository.find();
-        if (!codes) throw new NotFoundException('No codes found');
-        return codes;
-    }
-
-    /**
-     * Find one code based on the id
-     * @param id The id of the code
-     * @returns The code with this id
-     */
-    public async findOne(id: string): Promise<Code> {
-        const code = await this.codeRepository.findOne(id);
-        if (!code) throw new NotFoundException('Code with that ID does not exist');
-        return code;
-    }
-
-    /**
      * Check if code already exist, creates one, save it 
      * in the database and send the code to the user
      * @param id Id of the user
