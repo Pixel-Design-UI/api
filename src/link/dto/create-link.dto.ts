@@ -1,10 +1,10 @@
-import { IsNotEmpty } from "class-validator";
+import { IsString } from "class-validator";
 
 export class CreateLinkDto {
 
-    @IsNotEmpty()
+    @IsString()
     type: string;
 
-    @IsNotEmpty()
+    @IsString()
     url: string;
 }

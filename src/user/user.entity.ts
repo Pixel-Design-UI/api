@@ -1,5 +1,6 @@
 import { Code } from 'src/code/code.entity';
 import { Link } from 'src/link/link.entity';
+import { Post } from 'src/post/post.entity';
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 
 @Entity()
@@ -42,6 +43,9 @@ export class User {
 
     @OneToMany(() => Code, (code: Code) => code.userId, { cascade: true})
     codes: Code[];
+
+    @OneToMany(() => Post, (post: Post) => post.userId, { cascade: true})
+    posts: Post[];
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
