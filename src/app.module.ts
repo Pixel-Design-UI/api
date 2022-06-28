@@ -8,6 +8,8 @@ import { CodeModule } from './code/code.module';
 import { LinkModule } from './link/link.module';
 import { EventModule } from './event/event.module';
 import { BlogModule } from './blog/blog.module';
+import { PostModule } from './post/post.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { BlogModule } from './blog/blog.module';
     LinkModule,
     EventModule,
     BlogModule,
+    PostModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
