@@ -39,8 +39,14 @@ export class PostService {
  * Return all posts
  * @returns A list of all posts
  */
-  public async findAll(): Promise<Post[]> {
-    const allPosts = await this.postRepository.find();
+  public async findAll(index: number): Promise<Post[]> {
+    const allPosts = await this.postRepository.createQueryBuilder('post')
+    .orderBy('post.created_at', 'DESC')
+    .leftJoinAndSelect('post.userId', 'userId')
+    .offset(index)
+    .limit(3)
+    .getMany();
+
     if (allPosts.length === 0) throw new NotFoundException('There is not a single post');
 
     return allPosts;

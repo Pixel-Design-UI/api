@@ -14,12 +14,12 @@ export class PostController {
     return this.postService.create(createPostDto, req.user);
   }
 
-  @Get()
-  findAll() {
-    return this.postService.findAll();
+  @Get(':index')
+  findAll(@Param('index') index:number) {
+    return this.postService.findAll(index);
   }
 
-  @Get(':userId')
+  @Get('user/:userId')
   findAllForUser(@Param('userId') userId: string) {
     return this.postService.findAllForUser(userId);
   }
