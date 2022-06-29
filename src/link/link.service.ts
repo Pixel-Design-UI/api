@@ -34,18 +34,6 @@ export class LinkService {
   }
 
   /**
-   * Find all links of an user
-   * @returns A list of all links
-   * @param userId The id of the user
-   */
-  public async findAllForUser(userId: string): Promise<Link[]> {
-    const allLinks = await this.linkRepository.find({ where: { userId: userId } });
-    if (allLinks.length === 0) throw new NotFoundException('Link with that userId does not exist');
-
-    return allLinks;
-  }
-
-  /**
    * 
    * @param id The id of the link
    * @param data The data recieved

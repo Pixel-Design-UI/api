@@ -14,11 +14,6 @@ export class LinkController {
     return this.linkService.create(createLinkDto, req.user);
   }
 
-  @Get(':userId')
-  findAllForUser(@Param('userId') userId: string) {
-    return this.linkService.findAllForUser(userId);
-  }
-
   @Patch(':id')
   @UseGuards(AuthGuard())
   update(@Param('id') id: string, @Body() updateLinkDto: UpdateLinkDto, @Req() req) {
