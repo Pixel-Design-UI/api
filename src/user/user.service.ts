@@ -61,12 +61,41 @@ export class UserService {
   }
 
   /**
+   * Find all infos of an user
+   * @returns A list of all posts
+   * @param username The username of the user
+   */
+   public async findOne(username: string): Promise<User> {
+    const user = await this.userRepository.createQueryBuilder('user')
+    .where("user.username = :username", { username: username })
+    .addSelect('user.about')
+    .addSelect('user.createdAt')
+    .leftJoinAndSelect('user.links', 'userId')
+    .getOne();
+
+    if (!user) throw new NotFoundException('User with that username does not exist');
+    return user;
+  }
+
+
+  /**
    * Login the user
    * @param data The data recieved
    * @returns The user and jwt token
    */
   public async login(data: LoginDto): Promise<object> {
-    const user = await this.userRepository.findOne({ where: { email: data.email } });
+    
+    const user = await this.userRepository.createQueryBuilder('user')
+    .where("user.email = :email", { email: data.email })
+    .addSelect("user.email")
+    .addSelect("user.password")
+    .addSelect("user.isAdministrator")
+    .addSelect("user.emailValidated")
+    .addSelect("user.isLoggedWithGoogle")
+    .addSelect("user.isLoggedWithDiscord")
+    .addSelect("user.createdAt")
+    .addSelect("user.updatedAt")
+    .getOne();
 
     if (!user || !(await bcrypt.compare(data.password, user.password))) throw new BadRequestException('Email or password incorrect');
 

@@ -12,28 +12,22 @@ export class User {
     @Column()
     username: string;
 
-    @Column()
-    @Exclude({ toPlainOnly: true })
+    @Column({select: false})
     email: string;
 
-    @Column()
-    @Exclude({ toPlainOnly: true })
-    password?: string;
+    @Column({ select: false, nullable: true })
+    password: string;
 
-    @Column({ default: false })
-    @Exclude({ toPlainOnly: true })
+    @Column({ select: false, default: false })
     isAdministrator: boolean;
 
-    @Column({ default: false })
-    @Exclude({ toPlainOnly: true })
+    @Column({ select: false, default: false })
     emailValidated: boolean;
 
-    @Column({ default: false })
-    @Exclude({ toPlainOnly: true })
+    @Column({ select: false, default: false })
     isLoggedWithGoogle: boolean;
 
-    @Column({ default: false })
-    @Exclude({ toPlainOnly: true })
+    @Column({ select: false, default: false })
     isLoggedWithDiscord: boolean;
 
     @Column({ nullable: true })
@@ -42,27 +36,21 @@ export class User {
     @Column({ nullable: true })
     profileImg: string;
 
-    @Column({ nullable: true })
-    @Exclude({ toPlainOnly: true })
+    @Column({ select: false, nullable: true })
     about: string;
 
-    @OneToMany(() => Link, (link: Link) => link.userId, { cascade: true, eager:true})
-    @Exclude({ toPlainOnly: true })
+    @OneToMany(() => Link, (link: Link) => link.userId, { cascade: true })
     links: Link[];
 
     @OneToMany(() => Code, (code: Code) => code.userId, { cascade: true})
-    @Exclude({ toPlainOnly: true })
     codes: Code[];
 
     @OneToMany(() => Post, (post: Post) => post.userId)
-    @Exclude({ toPlainOnly: true })
     posts: Post[];
 
-    @CreateDateColumn({ name: 'created_at' })
-    @Exclude({ toPlainOnly: true })
+    @CreateDateColumn({ name: 'created_at', select: false })
     createdAt: Date;
 
-    @UpdateDateColumn({ name: 'updated_at' })
-    @Exclude({ toPlainOnly: true })
+    @UpdateDateColumn({ name: 'updated_at', select: false })
     updatedAt: Date;
 }

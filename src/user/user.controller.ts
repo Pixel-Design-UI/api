@@ -20,6 +20,11 @@ export class UserController {
     return this.userService.remove(req.user.id);
   }
 
+  @Get(':username')
+  findOne(@Param('username') username: string) {
+    return this.userService.findOne(username);
+  }
+
   @Post('login')
   login(@Body() data: LoginDto) {
     return this.userService.login(data);
