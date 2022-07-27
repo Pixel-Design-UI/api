@@ -57,8 +57,8 @@ export class PostService {
    * @returns A list of all posts
    * @param userId The id of the user
    */
-  public async findAllForUser(userId: string): Promise<Post[]> {
-    const allPosts = await this.postRepository.find({ where: { userId: userId } });
+  public async findAllForUser(username: string): Promise<Post[]> {
+    const allPosts = await this.postRepository.find({ where: { username: username } });
     if (allPosts.length === 0) throw new NotFoundException('Posts with that userId does not exist');
 
     return allPosts;

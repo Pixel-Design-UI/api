@@ -19,9 +19,9 @@ export class PostController {
     return this.postService.findAll(index);
   }
 
-  @Get('user/:userId')
-  findAllForUser(@Param('userId') userId: string) {
-    return this.postService.findAllForUser(userId);
+  @Get('user/:username')
+  findAllForUser(@Param('username') username: string) {
+    return this.postService.findAllForUser(username);
   }
 
   @Patch(':id')
