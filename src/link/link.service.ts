@@ -40,7 +40,7 @@ export class LinkService {
    * @returns A message if the link is deleted
    */
   public async update(idLink: string, data: UpdateLinkDto, user: User): Promise<object> {
-    const link = await this.linkRepository.findOne(idLink);
+    const link = await this.linkRepository.findOne({ where: { id: idLink, userId: user.id } });
     if (!link) throw new NotFoundException('Link does not exist');
 
     const editLink = {

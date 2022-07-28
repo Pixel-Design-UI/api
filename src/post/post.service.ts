@@ -10,7 +10,9 @@ import { Post } from './post.entity';
 export class PostService {
   constructor(
     @InjectRepository(Post)
-    private postRepository: Repository<Post>)
+    private postRepository: Repository<Post>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>)
   { }
 
 /**
@@ -44,7 +46,7 @@ export class PostService {
     .orderBy('post.created_at', 'DESC')
     .leftJoinAndSelect('post.userId', 'userId')
     .offset(index)
-    .limit(3)
+    .limit(100)
     .getMany();
 
     if (allPosts.length === 0) throw new NotFoundException('There is not a single post');
@@ -58,8 +60,11 @@ export class PostService {
    * @param userId The id of the user
    */
   public async findAllForUser(username: string): Promise<Post[]> {
-    const allPosts = await this.postRepository.find({ where: { username: username } });
-    if (allPosts.length === 0) throw new NotFoundException('Posts with that userId does not exist');
+    const user = await this.userRepository.findOne({ where: { username: username } });
+    if (!user) throw new NotFoundException('User with that username does not exist');
+
+    const allPosts = await this.postRepository.find({ where: { userId: user } });
+    if (allPosts.length === 0) throw new NotFoundException('This user has no posts');
 
     return allPosts;
   }
@@ -71,7 +76,7 @@ export class PostService {
    * @returns A message if the post is deleted
    */
   public async update(idPost: string, data: UpdatePostDto, user: User): Promise<object> {
-    const post = await this.postRepository.findOne(idPost);
+    const post = await this.postRepository.findOne({ where: { id: idPost, userId: user.id } });
     if (!post) throw new NotFoundException('Post does not exist');
 
     const editPost = {
@@ -97,7 +102,7 @@ export class PostService {
    */
   public async remove(idPost: string, user: User): Promise<object> {
     const post = await this.postRepository.findOne({ where: { id: idPost, userId: user.id } });
-    if (!post) throw new NotFoundException('Code does not exist');
+    if (!post) throw new NotFoundException('Post does not exist');
 
     await this.postRepository.remove(post);
 
