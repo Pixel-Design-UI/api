@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
@@ -8,27 +9,30 @@ export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentService.create(createCommentDto);
+  @UseGuards(AuthGuard())
+  create(@Body() createCommentDto: CreateCommentDto, @Req() req) {
+    return this.commentService.create(createCommentDto, req.user);
   }
 
-  @Get()
-  findAll() {
-    return this.commentService.findAll();
+  @Get('post/:postId')
+  findAllForPost(@Param('postId') postId: string) {
+    return this.commentService.findAllForPost(postId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentService.findOne(+id);
+  @Get('user/:userId')
+  findAllForUser(@Param('userId') userId: string) {
+    return this.commentService.findAllForUser(userId);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentService.update(+id, updateCommentDto);
+  @UseGuards(AuthGuard())
+  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto, @Req() req) {
+    return this.commentService.update(id, updateCommentDto, req.user);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.commentService.remove(+id);
+  @UseGuards(AuthGuard())
+  remove(@Param('id') id: string, @Req() req) {
+    return this.commentService.remove(id, req.user);
   }
 }

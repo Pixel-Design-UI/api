@@ -19,7 +19,7 @@ export class LinkService {
    * @param data The data recieved
    * @param user The user
    * @returns Id of the created link
-   */
+  */
   public async create(data: CreateLinkDto, user: User): Promise<object> {
     const newLink = {
       userId: user,
@@ -34,11 +34,12 @@ export class LinkService {
   }
 
   /**
-   * 
+   * Update a selected link
    * @param id The id of the link
    * @param data The data recieved
+   * @param user The user
    * @returns A message if the link is deleted
-   */
+  */
   public async update(idLink: string, data: UpdateLinkDto, user: User): Promise<object> {
     const link = await this.linkRepository.findOne({ where: { id: idLink, userId: user.id } });
     if (!link) throw new NotFoundException('Link does not exist');
@@ -60,7 +61,7 @@ export class LinkService {
    * @param id The id of the link
    * @param user The user
    * @returns A message if the link is deleted
-   */
+  */
   public async remove(idLink: string, user: User): Promise<object> {
     const link = await this.linkRepository.findOne({ where: { id: idLink, userId: user.id } });
     if (!link) throw new NotFoundException('Code does not exist');

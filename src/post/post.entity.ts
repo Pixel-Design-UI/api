@@ -1,13 +1,17 @@
+import { Comment } from "src/comment/comment.entity";
 import { User } from "src/user/user.entity";
-import { PrimaryGeneratedColumn, ManyToOne, Column, CreateDateColumn, Entity, UpdateDateColumn } from "typeorm";
+import { PrimaryGeneratedColumn, ManyToOne, Column, CreateDateColumn, Entity, UpdateDateColumn, OneToMany } from "typeorm";
 
 @Entity()
 export class Post {
     @PrimaryGeneratedColumn('uuid')
     id: number;
 
-    @ManyToOne(() => User, (userId: User) => userId.codes, { eager:true })
+    @ManyToOne(() => User, (userId: User) => userId.posts, { eager:true })
     userId: User;
+
+    @OneToMany(() => Comment, (comment: Comment) => comment.postId)
+    comments: Comment[];
 
     @Column()
     title: string;

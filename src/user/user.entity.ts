@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { Code } from 'src/code/code.entity';
+import { Comment } from 'src/comment/comment.entity';
 import { Link } from 'src/link/link.entity';
 import { Post } from 'src/post/post.entity';
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
@@ -47,6 +48,9 @@ export class User {
 
     @OneToMany(() => Post, (post: Post) => post.userId)
     posts: Post[];
+
+    @OneToMany(() => Comment, (comment: Comment) => comment.userId)
+    comments: Comment[];
 
     @CreateDateColumn({ name: 'created_at', select: false })
     createdAt: Date;
